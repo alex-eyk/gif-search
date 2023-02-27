@@ -1,5 +1,5 @@
 ext {
     hiltVersion = '2.44'
-
     fragmentVersion = '1.5.5'
+    navigationVersion = '2.5.3'
 }
