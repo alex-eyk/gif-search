@@ -1,3 +1,5 @@
 ext {
-    hiltVersion = "2.38.1"
+    hiltVersion = '2.44'
+
+    fragmentVersion = '1.5.5'
 }
