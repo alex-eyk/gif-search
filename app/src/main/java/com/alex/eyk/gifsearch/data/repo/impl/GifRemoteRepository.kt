@@ -5,7 +5,7 @@ import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.net.service.GifService
 import com.alex.eyk.gifsearch.data.repo.GifRepository
 
-class RemoteGifRepository(
+class GifRemoteRepository(
     private val gifService: GifService
 ) : GifRepository {
 
