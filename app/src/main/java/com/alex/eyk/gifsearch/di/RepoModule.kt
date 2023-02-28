@@ -2,7 +2,9 @@ package com.alex.eyk.gifsearch.di
 
 import com.alex.eyk.gifsearch.data.net.service.GifService
 import com.alex.eyk.gifsearch.data.repo.GifRepository
+import com.alex.eyk.gifsearch.data.repo.SuggestionsRepository
 import com.alex.eyk.gifsearch.data.repo.impl.RemoteGifRepository
+import com.alex.eyk.gifsearch.data.repo.impl.SuggestionsRemoteRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,5 +21,13 @@ object RepoModule {
         gifService: GifService
     ): GifRepository {
         return RemoteGifRepository(gifService)
+    }
+
+    @Singleton
+    @Provides
+    fun provideSuggestionsRemoteRepository(
+        gifService: GifService
+    ): SuggestionsRepository {
+        return SuggestionsRemoteRepository(gifService)
     }
 }

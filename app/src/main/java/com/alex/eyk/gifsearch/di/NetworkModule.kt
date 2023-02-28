@@ -1,5 +1,6 @@
 package com.alex.eyk.gifsearch.di
 
+import com.alex.eyk.gifsearch.data.net.interceptor.GiphyApiKeyInterceptor
 import com.alex.eyk.gifsearch.data.net.service.GifService
 import dagger.Module
 import dagger.Provides
@@ -23,7 +24,7 @@ object NetworkModule {
     fun provideGifService(): GifService {
         return Retrofit.Builder()
             .baseUrl(GIF_API_SERVER_URL)
-            .client(provideClient())
+            .client(provideGiphyClient())
             .addConverterFactory(
                 GsonConverterFactory.create()
             )
@@ -31,12 +32,15 @@ object NetworkModule {
             .create(GifService::class.java)
     }
 
-    private fun provideClient(): OkHttpClient {
+    private fun provideGiphyClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addInterceptor(
                 HttpLoggingInterceptor().apply {
                     level = BODY
                 }
+            )
+            .addInterceptor(
+                GiphyApiKeyInterceptor()
             )
             .build()
     }
