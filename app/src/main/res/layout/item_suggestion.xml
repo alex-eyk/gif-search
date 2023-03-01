@@ -6,9 +6,17 @@
 
         <import type="com.alex.eyk.gifsearch.data.entity.Suggestion" />
 
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="kotlin.Unit" />
+
         <variable
             name="suggestion"
             type="Suggestion" />
+
+        <variable
+            name="onItemClick"
+            type="Function1&lt;Suggestion, Unit>" />
     </data>
 
     <TextView
@@ -18,6 +26,7 @@
         android:background="?attr/selectableItemBackground"
         android:clickable="true"
         android:focusable="true"
+        android:onClick="@{() -> onItemClick.invoke(suggestion)}"
         android:padding="16dp"
         android:text="@{suggestion.name}"
         tools:text="Предложение" />

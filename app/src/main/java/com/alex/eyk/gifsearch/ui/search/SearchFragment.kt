@@ -39,6 +39,9 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             prepareSuggestionsRecyclerViews()
             prepareSearchRecyclerView()
         }
+        suggestionsAdapter.onItemClick = {
+            viewModel.onSuggestionSelected(it)
+        }
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {

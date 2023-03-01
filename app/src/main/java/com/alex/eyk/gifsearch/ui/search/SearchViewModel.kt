@@ -41,6 +41,13 @@ class SearchViewModel @Inject constructor(
         }
     }
 
+    fun onSuggestionSelected(
+        suggestion: Suggestion
+    ) {
+        query.value = suggestion.name
+        search()
+    }
+
     fun updateSuggestions() {
         if (query.value.isBlank()) {
             return

@@ -1,19 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:tools="http://schemas.android.com/tools"
-    xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
 
         <import type="com.alex.eyk.gifsearch.data.entity.Gif" />
 
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="kotlin.Unit" />
+
         <variable
             name="gif"
             type="Gif" />
+
+        <variable
+            name="onItemClick"
+            type="Function1&lt;Gif, Unit>" />
     </data>
 
     <ImageView
         android:id="@+id/gif_image_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> onItemClick.invoke(gif)}"
         tools:ignore="ContentDescription" />
 </layout>

@@ -13,19 +13,20 @@ class GifAdapter : BindingListAdapter<ItemGifBinding, Gif, GifViewHolder>(
     layoutRes = R.layout.item_gif
 ) {
 
+    var onItemClick: ((gif: Gif) -> Unit)? = null
+
     override fun onCreateViewHolder(
         binding: ItemGifBinding
     ) = GifViewHolder(binding)
 
-    class GifViewHolder(
+    inner class GifViewHolder(
         binding: ItemGifBinding
     ) : BindingViewHolder<Gif, ItemGifBinding>(binding) {
 
         override fun bindTo(item: Gif) {
-            binding.apply {
-                this.gif = item
-                executePendingBindings()
-            }
+            binding.gif = item
+            binding.onItemClick = onItemClick
+            binding.executePendingBindings()
         }
     }
 
