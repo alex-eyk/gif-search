@@ -3,7 +3,9 @@ package com.alex.eyk.gifsearch.ui.search
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.alex.eyk.gifsearch.R
 import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.entity.Suggestion
@@ -34,18 +36,19 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             searchView.editText.addTextChangedListener {
                 viewModel?.updateSuggestions()
             }
-            initRecyclerViews()
+            prepareSuggestionsRecyclerViews()
+            prepareSearchRecyclerView()
         }
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
-        lifecycleScope.launch {
-            viewModel.suggestions
-                .collect(::collectSuggestionsState)
-        }
-        lifecycleScope.launch {
-            viewModel.searchResults
-                .collect(::collectSearchResultsState)
+        viewModel.apply {
+            lifecycleScope.launch {
+                suggestions.collect(::collectSuggestionsState)
+            }
+            lifecycleScope.launch {
+                searchResults.collect(::collectSearchResultsState)
+            }
         }
     }
 
@@ -64,20 +67,53 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     private fun collectSearchResultsState(
         state: UiState<List<Gif>>
     ) {
-        when (state) {
-            is UiState.None -> {}
-            is UiState.Success -> {
-                gifsAdapter.submitList(state.value)
+        collectState(
+            state,
+            onSuccess = {
+                gifsAdapter.submitList(it)
+            },
+            onLoading = {
+            },
+            onClear = {
+                gifsAdapter.submitList(emptyList())
             }
-            else -> {}
+        )
+    }
+
+    private inline fun <T : Any> collectState(
+        state: UiState<T>,
+        onSuccess: (result: T) -> Unit,
+        onLoading: () -> Unit,
+        onClear: () -> Unit
+    ) {
+        when (state) {
+            is UiState.None -> {
+                onClear()
+            }
+            is UiState.Loading -> {
+                onLoading()
+            }
+            is UiState.Success -> {
+                onSuccess(state.value)
+            }
+            is UiState.Failure -> {
+            }
         }
     }
 
-    private fun FragmentGifSearchBinding.initRecyclerViews() {
+    private fun FragmentGifSearchBinding.prepareSuggestionsRecyclerViews() {
         suggestionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = suggestionsAdapter
+            val dividerItemDecoration = DividerItemDecoration(
+                context,
+                HORIZONTAL
+            )
+            addItemDecoration(dividerItemDecoration)
         }
+    }
+
+    private fun FragmentGifSearchBinding.prepareSearchRecyclerView() {
         searchResultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = gifsAdapter
