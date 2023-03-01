@@ -4,6 +4,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.alex.eyk.gifsearch.R
@@ -38,10 +39,15 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             }
             prepareSuggestionsRecyclerViews()
             prepareSearchRecyclerView()
+            searchView.editText
+                .setOnEditorActionListener { _, _, _ ->
+                    onSuggestionSelected(
+                        Suggestion(searchView.text.toString())
+                    )
+                    return@setOnEditorActionListener false
+                }
         }
-        suggestionsAdapter.onItemClick = {
-            viewModel.onSuggestionSelected(it)
-        }
+        suggestionsAdapter.onItemClick = ::onSuggestionSelected
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
@@ -53,6 +59,13 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 searchResults.collect(::collectSearchResultsState)
             }
         }
+    }
+
+    private fun onSuggestionSelected(
+        suggestion: Suggestion
+    ) {
+        binding.searchView.hide()
+        viewModel.onSuggestionSelected(suggestion)
     }
 
     private fun collectSuggestionsState(
@@ -118,7 +131,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
 
     private fun FragmentGifSearchBinding.prepareSearchRecyclerView() {
         searchResultsRecyclerView.apply {
-            layoutManager = LinearLayoutManager(context)
+            layoutManager = GridLayoutManager(context, 3)
             adapter = gifsAdapter
         }
     }

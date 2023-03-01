@@ -7,6 +7,7 @@ import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.data.repo.GifRepository
 import com.alex.eyk.gifsearch.data.repo.SuggestionsRepository
 import com.alex.eyk.gifsearch.ui.UiState
+import com.alex.eyk.gifsearch.ui.UiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -29,7 +30,9 @@ class SearchViewModel @Inject constructor(
 
     fun search() {
         if (query.value.isBlank()) {
-            return
+            if (_searchResults.value is Success) {
+                _searchResults.value = UiState.None
+            }
         }
         viewModelScope.launch {
             _searchResults.value = UiState.by {
