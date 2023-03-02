@@ -14,6 +14,7 @@ object GifBindingAdapter {
     ) {
         Glide.with(imageView)
             .load(url)
+            .centerCrop()
             .into(imageView)
     }
 }
