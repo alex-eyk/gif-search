@@ -1,6 +1,7 @@
 package com.alex.eyk.gifsearch.ui.info
 
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.navArgs
 import com.alex.eyk.gifsearch.R
 import com.alex.eyk.gifsearch.databinding.FragmentGifInfoBinding
 import com.alex.eyk.gifsearch.ui.AbstractFragment
@@ -12,4 +13,6 @@ class GifInfoFragment : AbstractFragment<FragmentGifInfoBinding>(
 ) {
 
     private val viewModel by viewModels<GifInfoViewModel>()
+
+    private val navArgs by navArgs<GifInfoFragmentArgs>()
 }

@@ -20,5 +20,11 @@
         android:id="@+id/fragment_gif_info"
         android:name="com.alex.eyk.gifsearch.ui.info.GifInfoFragment"
         android:label="Info"
-        tools:layout="@layout/fragment_gif_info" />
+        tools:layout="@layout/fragment_gif_info">
+
+        <argument
+            android:name="gif"
+            app:argType="com.alex.eyk.gifsearch.data.entity.Gif"
+            app:nullable="false" />
+    </fragment>
 </navigation>
