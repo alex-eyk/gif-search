@@ -11,6 +11,7 @@ interface GifService {
     @GET("search")
     suspend fun search(
         @Query("q") query: String,
+        @Query("limit") limit: Int,
         @Query("offset") offset: Int
     ): Response<GifSearchResponseBody>
 

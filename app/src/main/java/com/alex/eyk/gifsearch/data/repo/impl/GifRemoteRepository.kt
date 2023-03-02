@@ -11,10 +11,11 @@ class GifRemoteRepository(
 
     override suspend fun findAll(
         query: String,
+        limit: Int,
         offset: Int
     ): Either<List<Gif>> {
         return handleResponse(
-            gifService.search(query, offset)
+            gifService.search(query, limit, offset)
         ) { response ->
             response.gifs
         }

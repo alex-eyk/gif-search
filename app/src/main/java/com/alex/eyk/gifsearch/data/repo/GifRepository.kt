@@ -7,6 +7,7 @@ interface GifRepository {
 
     suspend fun findAll(
         query: String,
+        limit: Int,
         offset: Int
     ): Either<List<Gif>>
 }
