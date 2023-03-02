@@ -1,5 +1,8 @@
 package com.alex.eyk.gifsearch.data.entity
 
+import android.os.Parcel
+import android.os.Parcelable
+import android.os.Parcelable.Creator
 import com.google.gson.annotations.SerializedName
 
 data class Gif(
@@ -30,4 +33,46 @@ data class Gif(
 
     @SerializedName("images")
     val images: Images
-)
+) : Parcelable {
+
+    constructor(parcel: Parcel) : this(
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        parcel.readString() ?: "",
+        ParcelableUtils.readParcelable(parcel, User::class.java),
+        ParcelableUtils.readParcelable(parcel, Images::class.java)
+    )
+
+    override fun writeToParcel(
+        parcel: Parcel,
+        flags: Int
+    ) {
+        parcel.writeString(id)
+        parcel.writeString(url)
+        parcel.writeString(shortUrl)
+        parcel.writeString(author)
+        parcel.writeString(source)
+        parcel.writeString(sourceDomain)
+        parcel.writeString(rating)
+        parcel.writeParcelable(user, flags)
+        parcel.writeParcelable(images, flags)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Creator<Gif> {
+        override fun createFromParcel(parcel: Parcel): Gif {
+            return Gif(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Gif?> {
+            return arrayOfNulls(size)
+        }
+    }
+}
