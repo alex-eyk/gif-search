@@ -22,15 +22,6 @@ data class Gif(
     @SerializedName("source")
     val source: String,
 
-    @SerializedName("source_rld")
-    val sourceDomain: String,
-
-    @SerializedName("rating")
-    val rating: String,
-
-    @SerializedName("user")
-    val user: User?,
-
     @SerializedName("images")
     val images: Images
 ) : Parcelable {
@@ -41,10 +32,8 @@ data class Gif(
         parcel.readString() ?: "",
         parcel.readString() ?: "",
         parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        parcel.readString() ?: "",
-        ParcelableUtils.readParcelable(parcel, User::class.java),
         ParcelableUtils.readParcelable(parcel, Images::class.java)
+            ?: throw IllegalStateException()
     )
 
     override fun writeToParcel(
@@ -56,9 +45,6 @@ data class Gif(
         parcel.writeString(shortUrl)
         parcel.writeString(author)
         parcel.writeString(source)
-        parcel.writeString(sourceDomain)
-        parcel.writeString(rating)
-        parcel.writeParcelable(user, flags)
         parcel.writeParcelable(images, flags)
     }
 

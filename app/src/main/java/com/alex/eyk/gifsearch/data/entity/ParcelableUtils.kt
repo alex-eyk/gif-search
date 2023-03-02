@@ -9,7 +9,7 @@ object ParcelableUtils {
     internal fun <T : Parcelable> readParcelable(
         parcel: Parcel,
         clazz: Class<T>
-    ): T {
+    ): T? {
         val parcelable: T?
         if (VERSION.SDK_INT < 33) {
             @Suppress("DEPRECATION")
@@ -17,6 +17,6 @@ object ParcelableUtils {
         } else {
             parcelable = parcel.readParcelable(clazz.classLoader, clazz)
         }
-        return parcelable ?: throw IllegalStateException()
+        return parcelable
     }
 }

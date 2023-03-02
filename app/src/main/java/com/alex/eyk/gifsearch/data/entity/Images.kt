@@ -13,6 +13,7 @@ data class Images(
 
     constructor(parcel: Parcel) : this(
         ParcelableUtils.readParcelable(parcel, OriginalImage::class.java)
+            ?: throw IllegalStateException()
     )
 
     override fun writeToParcel(
