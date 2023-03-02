@@ -3,6 +3,7 @@ package com.alex.eyk.gifsearch.ui.search
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,6 +16,7 @@ import com.alex.eyk.gifsearch.ui.AbstractFragment
 import com.alex.eyk.gifsearch.ui.UiState
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
+import com.alex.eyk.gifsearch.ui.toPx
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -23,6 +25,12 @@ import kotlinx.coroutines.launch
 class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     layoutRes = R.layout.fragment_gif_search
 ) {
+
+    companion object {
+
+        private const val GIFS_SPACING_DP = 8
+        private const val GIFS_SPAN_COUNT = 3
+    }
 
     private val viewModel by viewModels<SearchViewModel>()
 
@@ -48,6 +56,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 }
         }
         suggestionsAdapter.onItemClick = ::onSuggestionSelected
+        gifsAdapter.onItemClick = ::onGifSelected
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
@@ -66,6 +75,12 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     ) {
         binding.searchView.hide()
         viewModel.onSuggestionSelected(suggestion)
+    }
+
+    private fun onGifSelected(gif: Gif) {
+        val action = SearchFragmentDirections
+            .actionGifSearchToGifInfo(gif)
+        findNavController().navigate(action)
     }
 
     private fun collectSuggestionsState(
@@ -133,6 +148,12 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         searchResultsRecyclerView.apply {
             layoutManager = GridLayoutManager(context, 3)
             adapter = gifsAdapter
+            addItemDecoration(
+                SpacesItemDecoration(
+                    spaceInPx = GIFS_SPACING_DP.toPx,
+                    spanCount = GIFS_SPAN_COUNT
+                )
+            )
         }
     }
 }
