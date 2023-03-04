@@ -6,4 +6,5 @@
     <string name="link">Ссылка</string>
     
     <string name="link_copied">Ссылка скопирована</string>
+    <string name="loading_new_gifs">Загружаем новые гифки…</string>
 </resources>

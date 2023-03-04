@@ -33,6 +33,7 @@
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> onItemClick.invoke(gif)}"
+            android:background="#1AD1C4E9"
             app:centering="@{true}"
             app:gifUrl="@{gif.images.downsized.url}"
             app:layout_constraintBottom_toBottomOf="parent"

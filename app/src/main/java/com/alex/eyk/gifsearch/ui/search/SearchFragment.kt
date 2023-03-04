@@ -14,9 +14,11 @@ import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.databinding.FragmentGifSearchBinding
 import com.alex.eyk.gifsearch.ui.AbstractFragment
 import com.alex.eyk.gifsearch.ui.UiState
+import com.alex.eyk.gifsearch.ui.ext.addOnScrolledToBottomListener
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
 import com.alex.eyk.gifsearch.ui.toPx
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -37,6 +39,8 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     private val gifsAdapter = GifAdapter()
     private val suggestionsAdapter = SuggestionAdapter()
 
+    private var scrollComplete: Boolean = false
+
     override fun onBindingCreated() {
         super.onBindingCreated()
         binding.viewModel = viewModel
@@ -54,6 +58,13 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                     )
                     return@setOnEditorActionListener false
                 }
+            searchResultsRecyclerView.addOnScrolledToBottomListener {
+                if (scrollComplete) {
+                    return@addOnScrolledToBottomListener
+                }
+                viewModel?.searchNextGifs()
+                scrollComplete = true
+            }
         }
         suggestionsAdapter.onItemClick = ::onSuggestionSelected
         gifsAdapter.onItemClick = ::onGifSelected
@@ -66,6 +77,9 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             }
             lifecycleScope.launch {
                 searchResults.collect(::collectSearchResultsState)
+            }
+            lifecycleScope.launch {
+                nextResults.collect(::collectNextResultsState)
             }
         }
     }
@@ -87,9 +101,13 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         state: UiState<List<Suggestion>>
     ) {
         when (state) {
-            is UiState.None -> {}
+            is UiState.None -> {
+                gifsAdapter.submitList(emptyList())
+            }
             is UiState.Success -> {
                 suggestionsAdapter.submitList(state.value)
+            }
+            is UiState.Loading -> {
             }
             else -> {}
         }
@@ -98,37 +116,37 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     private fun collectSearchResultsState(
         state: UiState<List<Gif>>
     ) {
-        collectState(
-            state,
-            onSuccess = {
-                gifsAdapter.submitList(it)
-            },
-            onLoading = {
-            },
-            onClear = {
-                gifsAdapter.submitList(emptyList())
-            }
-        )
-    }
-
-    private inline fun <T : Any> collectState(
-        state: UiState<T>,
-        onSuccess: (result: T) -> Unit,
-        onLoading: () -> Unit,
-        onClear: () -> Unit
-    ) {
         when (state) {
             is UiState.None -> {
-                onClear()
-            }
-            is UiState.Loading -> {
-                onLoading()
+                gifsAdapter.submitList(emptyList())
             }
             is UiState.Success -> {
-                onSuccess(state.value)
+                gifsAdapter.submitList(state.value)
             }
             is UiState.Failure -> {
             }
+            else -> {}
+        }
+    }
+
+    private fun collectNextResultsState(
+        state: UiState<List<Gif>>
+    ) {
+        when (state) {
+            is UiState.Loading -> {
+                Snackbar.make(
+                    requireView(),
+                    R.string.loading_new_gifs,
+                    Snackbar.LENGTH_SHORT
+                ).show()
+            }
+            is UiState.Success -> {
+                gifsAdapter.submitList(
+                    gifsAdapter.currentList + state.value
+                )
+                scrollComplete = false
+            }
+            else -> {}
         }
     }
 
