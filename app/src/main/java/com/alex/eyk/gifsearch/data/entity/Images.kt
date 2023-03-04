@@ -8,7 +8,10 @@ import kotlinx.parcelize.Parcelize
 data class Images(
 
     @SerializedName("original")
-    val original: OriginalImage
+    val original: OriginalImage,
+
+    @SerializedName("downsized")
+    val downsized: DownsizedImage
 ) : Parcelable
 
 @Parcelize
