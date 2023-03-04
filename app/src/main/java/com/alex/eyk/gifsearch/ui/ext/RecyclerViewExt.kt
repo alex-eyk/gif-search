@@ -13,8 +13,8 @@ fun RecyclerView.addOnScrolledToBottomListener(
                 newState: Int
             ) {
                 super.onScrollStateChanged(recyclerView, newState)
-                if (!recyclerView.canScrollVertically(1)
-                    && newState == RecyclerView.SCROLL_STATE_IDLE
+                if (!recyclerView.canScrollVertically(1) &&
+                    newState == RecyclerView.SCROLL_STATE_IDLE
                 ) {
                     onScrolledToBottom()
                 }

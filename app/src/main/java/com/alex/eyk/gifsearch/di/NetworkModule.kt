@@ -12,13 +12,13 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import javax.inject.Singleton
 import okhttp3.Cache
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import okhttp3.logging.HttpLoggingInterceptor.Level.BODY
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
@@ -27,6 +27,9 @@ object NetworkModule {
     private const val GIF_API_SERVER_URL = "https://api.giphy.com/v1/gifs/"
 
     private const val GIPHY_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
+
+    private const val KB_IN_MB = 1024
+    private const val B_IN_KB = 1024
 
     @Singleton
     @Provides
@@ -94,6 +97,7 @@ object NetworkModule {
     private fun calculateCacheSizeInB(
         maxSizeInMB: Int
     ): Long {
-        return (maxSizeInMB * 1024L * 1024L * AppPreferences.CACHE_FOR_RESPONSES).toLong()
+        return (maxSizeInMB * KB_IN_MB * B_IN_KB * AppPreferences.CACHE_FOR_RESPONSES)
+            .toLong()
     }
 }

@@ -12,7 +12,8 @@ class GifSearchApplication : Application() {
         if (BuildConfig.DEBUG_MODE) {
             val threadPolicy = StrictMode.ThreadPolicy.Builder()
                 .detectAll()
-                .penaltyDialog()
+                .penaltyLog()
+                // .penaltyDialog()
                 .build()
             StrictMode.setThreadPolicy(threadPolicy)
             val vmPolicy = StrictMode.VmPolicy.Builder()

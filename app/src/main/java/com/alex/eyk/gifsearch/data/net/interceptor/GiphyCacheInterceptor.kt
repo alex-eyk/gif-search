@@ -1,7 +1,7 @@
 package com.alex.eyk.gifsearch.data.net.interceptor
 
-import com.alex.eyk.gifsearch.data.domain.NetworkState
-import com.alex.eyk.gifsearch.data.domain.NetworkStateUseCase
+import com.alex.eyk.gifsearch.domain.net.NetworkState
+import com.alex.eyk.gifsearch.domain.net.NetworkStateUseCase
 import okhttp3.Interceptor
 import okhttp3.Interceptor.Chain
 import okhttp3.Request

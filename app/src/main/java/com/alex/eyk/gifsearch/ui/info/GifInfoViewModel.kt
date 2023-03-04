@@ -5,12 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.domain.clipboard.CopyUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import java.text.SimpleDateFormat
+import java.util.Locale
+import javax.inject.Inject
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
-import java.text.SimpleDateFormat
-import java.util.*
-import javax.inject.Inject
 
 @HiltViewModel
 class GifInfoViewModel @Inject constructor(

@@ -7,8 +7,6 @@
 
         <import type="android.view.View" />
 
-        <import type="kotlin.text.StringsKt" />
-
         <variable
             name="viewModel"
             type="com.alex.eyk.gifsearch.ui.info.GifInfoViewModel" />

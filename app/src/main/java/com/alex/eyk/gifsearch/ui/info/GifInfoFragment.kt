@@ -17,7 +17,6 @@ import com.google.android.material.snackbar.Snackbar.LENGTH_SHORT
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 
-
 @AndroidEntryPoint
 class GifInfoFragment : AbstractFragment<FragmentGifInfoBinding>(
     layoutRes = R.layout.fragment_gif_info

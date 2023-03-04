@@ -20,7 +20,7 @@ object ViewBindingAdapters {
 
     @BindingAdapter("visibleOnCorrectDate")
     @JvmStatic
-    fun setVisibeOnDateCorrect(
+    fun setVisibleOnDateCorrect(
         view: View,
         date: Date
     ) {

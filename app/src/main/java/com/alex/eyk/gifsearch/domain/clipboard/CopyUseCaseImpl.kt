@@ -12,7 +12,7 @@ class CopyUseCaseImpl(
 
     init {
         this.clipboardManager = appContext.getSystemService(Context.CLIPBOARD_SERVICE)
-                as ClipboardManager
+            as ClipboardManager
     }
 
     override fun copy(

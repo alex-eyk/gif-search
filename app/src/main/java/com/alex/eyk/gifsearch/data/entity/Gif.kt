@@ -2,8 +2,8 @@ package com.alex.eyk.gifsearch.data.entity
 
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
-import kotlinx.parcelize.Parcelize
 import java.util.Date
+import kotlinx.parcelize.Parcelize
 
 @Parcelize
 data class Gif(
