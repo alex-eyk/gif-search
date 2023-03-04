@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">gif search</string>
     <string name="search_hint">Поиск</string>
+
+    <string name="name">Название</string>
+    <string name="link">Ссылка</string>
+    
+    <string name="link_copied">Ссылка скопирована</string>
 </resources>

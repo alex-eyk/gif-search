@@ -29,15 +29,17 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:clickable="true"
+            android:contentDescription="@{gif.title}"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> onItemClick.invoke(gif)}"
+            app:centering="@{true}"
+            app:gifUrl="@{gif.images.downsized.url}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:url="@{gif.images.original.url}"
             tools:ignore="ContentDescription" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
