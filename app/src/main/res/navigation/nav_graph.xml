@@ -13,7 +13,11 @@
 
         <action
             android:id="@+id/action_gif_search_to_gif_info"
-            app:destination="@id/fragment_gif_info" />
+            app:destination="@id/fragment_gif_info"
+            app:enterAnim="@animator/enter"
+            app:exitAnim="@animator/exit"
+            app:popEnterAnim="@animator/enter"
+            app:popExitAnim="@animator/exit" />
     </fragment>
 
     <fragment

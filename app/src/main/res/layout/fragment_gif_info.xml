@@ -1,55 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <data>
+
+        <import type="android.view.View" />
 
         <variable
             name="viewModel"
             type="com.alex.eyk.gifsearch.ui.info.GifInfoViewModel" />
     </data>
 
-    <LinearLayout
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="match_parent">
 
-        <ImageView
-            android:id="@+id/gif_image"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:contentDescription="@{viewModel.gif.title}"
-            app:gifUrl="@{viewModel.gif.images.original.url}"
-            app:loading="@{true}" />
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#20000000" />
+            <ImageView
+                android:id="@+id/gif_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPlaceholder"
+                android:contentDescription="@{viewModel.gif.title}"
+                app:gifUrl="@{viewModel.gif.images.original.url}"
+                app:loading="@{true}"
+                tools:layout_height="200dp" />
 
-        <include
-            layout="@layout/item_detailed_clickable"
-            app:caption="@{viewModel.gif.title}"
-            app:icon="@{@drawable/ic_title}"
-            app:title="@{@string/name}" />
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#20000000" />
+            <include
+                layout="@layout/item_detailed_clickable"
+                android:visibility='@{!viewModel.gif.title.equals("") ? View.VISIBLE : View.GONE}'
+                app:caption="@{viewModel.gif.title}"
+                app:icon="@{@drawable/ic_title}"
+                app:title="@{@string/name}" />
 
-        <include
-            android:id="@+id/gif_short_url"
-            layout="@layout/item_detailed_clickable"
-            app:caption="@{viewModel.gif.shortUrl}"
-            app:icon="@{@drawable/ic_link}"
-            app:onClick="@{() -> viewModel.onUrlClick()}"
-            app:onLongClick="@{viewModel::onUrlLongClick}"
-            app:title="@{@string/link}" />
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height" />
 
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:background="#20000000" />
-    </LinearLayout>
+            <include
+                android:id="@+id/gif_short_url"
+                layout="@layout/item_detailed_clickable"
+                app:caption="@{viewModel.gif.getOptimalUrl()}"
+                app:icon="@{@drawable/ic_link}"
+                app:onClick="@{() -> viewModel.onUrlClick()}"
+                app:onLongClick="@{viewModel::onUrlLongClick}"
+                app:title="@{@string/link}" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height" />
+        </LinearLayout>
+    </ScrollView>
 </layout>

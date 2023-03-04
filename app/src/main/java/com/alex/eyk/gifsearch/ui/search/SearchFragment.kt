@@ -18,7 +18,6 @@ import com.alex.eyk.gifsearch.ui.ext.addOnScrolledToBottomListener
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
 import com.alex.eyk.gifsearch.ui.toPx
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -50,7 +49,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 viewModel?.updateSuggestions()
             }
             prepareSuggestionsRecyclerViews()
-            prepareSearchRecyclerView()
+            prepareGifsRecyclerView()
             searchView.editText
                 .setOnEditorActionListener { _, _, _ ->
                     onSuggestionSelected(
@@ -58,7 +57,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                     )
                     return@setOnEditorActionListener false
                 }
-            searchResultsRecyclerView.addOnScrolledToBottomListener {
+            gifsRecyclerView.addOnScrolledToBottomListener {
                 if (scrollComplete) {
                     return@addOnScrolledToBottomListener
                 }
@@ -124,6 +123,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 gifsAdapter.submitList(state.value)
             }
             is UiState.Failure -> {
+                quickSnackbar(R.string.unable_to_load_gifs)
             }
             else -> {}
         }
@@ -133,12 +133,9 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         state: UiState<List<Gif>>
     ) {
         when (state) {
+            is UiState.None -> {}
             is UiState.Loading -> {
-                Snackbar.make(
-                    requireView(),
-                    R.string.loading_new_gifs,
-                    Snackbar.LENGTH_SHORT
-                ).show()
+                quickSnackbar(R.string.loading_new_gifs)
             }
             is UiState.Success -> {
                 gifsAdapter.submitList(
@@ -146,7 +143,10 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 )
                 scrollComplete = false
             }
-            else -> {}
+            is UiState.Failure -> {
+                quickSnackbar(R.string.unable_to_load_gifs)
+                scrollComplete = false
+            }
         }
     }
 
@@ -162,9 +162,9 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         }
     }
 
-    private fun FragmentGifSearchBinding.prepareSearchRecyclerView() {
-        searchResultsRecyclerView.apply {
-            layoutManager = GridLayoutManager(context, 3)
+    private fun FragmentGifSearchBinding.prepareGifsRecyclerView() {
+        gifsRecyclerView.apply {
+            layoutManager = GridLayoutManager(context, GIFS_SPAN_COUNT)
             adapter = gifsAdapter
             addItemDecoration(
                 SpacesItemDecoration(

@@ -1,9 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="icon_size">24dp</dimen>
+
+    <dimen name="icon_side_size">24dp</dimen>
+
+    <dimen name="search_bar_height">72dp</dimen>
+    <dimen name="divider_height">1dp</dimen>
+
     <dimen name="start_margin">16dp</dimen>
     <dimen name="box_top_margin">16dp</dimen>
     <dimen name="between_elements_medium_margin">24dp</dimen>
+
     <dimen name="box_padding">16dp</dimen>
-    <dimen name="search_bar_height">72dp</dimen>
 </resources>

@@ -3,15 +3,18 @@
     <style name="Theme.GifSearch" parent="Theme.Material3.DayNight.NoActionBar">
 
         <item name="colorPrimary">@color/purple_200</item>
-        <item name="colorPrimaryVariant">@color/purple_700</item>
+        <item name="colorPrimaryVariant">@color/purple_400</item>
         <item name="colorOnPrimary">@color/black</item>
 
         <item name="colorSecondary">@color/purple_400</item>
-        <item name="colorSecondaryVariant">@color/purple_400</item>
+        <item name="colorSecondaryVariant">@color/white</item>
         <item name="colorOnSecondary">@color/black</item>
 
-        <item name="colorOnSurfaceVariant">@color/purple_400</item>
+        <item name="backgroundColor">@color/black</item>
+
+        <item name="colorPlaceholder">@color/purple_50_100</item>
 
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:navigationBarColor">@color/purple_500</item>
     </style>
 </resources>

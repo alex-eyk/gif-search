@@ -45,12 +45,13 @@
 
         <ImageView
             android:id="@+id/selectable_item_icon"
-            android:layout_width="@dimen/icon_size"
-            android:layout_height="@dimen/icon_size"
+            android:layout_width="@dimen/icon_side_size"
+            android:layout_height="@dimen/icon_side_size"
             android:src="@{icon}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
+            app:tint="?attr/colorSecondaryVariant"
             tools:ignore="ContentDescription"
             tools:src="@drawable/ic_title" />
 
@@ -72,7 +73,8 @@
             style="@style/TextAppearance.Material3.BodySmall"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:maxLines="2"
+            android:ellipsize="end"
+            android:maxLines="1"
             android:text="@{caption}"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="@id/selectable_item_title"

@@ -35,7 +35,7 @@ class GifInfoViewModel @Inject constructor(
     fun onUrlClick() {
         viewModelScope.launch {
             eventChannel.send(
-                Event.OpenUrl(gif.shortUrl)
+                Event.OpenUrl(gif.getOptimalUrl())
             )
         }
     }
@@ -44,10 +44,10 @@ class GifInfoViewModel @Inject constructor(
         viewModelScope.launch {
             copyUseCase.copy(
                 GIF_URL_LABEL,
-                data = gif.shortUrl
+                data = gif.getOptimalUrl()
             )
             eventChannel.send(
-                Event.NotifyCopied(gif.shortUrl)
+                Event.NotifyCopied(gif.getOptimalUrl())
             )
         }
     }

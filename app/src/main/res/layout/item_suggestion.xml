@@ -27,7 +27,7 @@
         android:clickable="true"
         android:focusable="true"
         android:onClick="@{() -> onItemClick.invoke(suggestion)}"
-        android:padding="16dp"
+        android:padding="@dimen/box_padding"
         android:text="@{suggestion.name}"
         tools:text="Предложение" />
 </layout>

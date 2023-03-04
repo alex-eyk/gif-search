@@ -7,15 +7,16 @@
         <item name="colorOnPrimary">@color/white</item>
 
         <item name="colorSecondary">@color/purple_400</item>
-        <item name="colorSecondaryVariant">#000</item>
-        <item name="colorSecondaryContainer">@color/purple_800</item>
-
+        <item name="colorSecondaryVariant">@color/black</item>
         <item name="colorOnSecondary">@color/purple_900</item>
+
         <item name="backgroundColor">@color/white</item>
+
+        <item name="colorPlaceholder">@color/purple_50_100</item>
 
         <item name="android:windowLightStatusBar">true</item>
 
-        <item name="android:navigationBarColor">@color/purple_900</item>
+        <item name="android:navigationBarColor">@color/purple_800</item>
         <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
     </style>
 </resources>

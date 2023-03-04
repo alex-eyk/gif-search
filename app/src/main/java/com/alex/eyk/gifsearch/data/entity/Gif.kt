@@ -26,5 +26,11 @@ data class Gif(
     val source: String,
 
     @SerializedName("images")
-    val images: Images
-) : Parcelable
+    val images: Images,
+
+    ) : Parcelable {
+
+    fun getOptimalUrl(): String {
+        return shortUrl.ifEmpty { url }
+    }
+}

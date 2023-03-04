@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
@@ -28,20 +27,19 @@
             android:id="@+id/gif_image_view"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:background="?attr/colorPlaceholder"
             android:clickable="true"
             android:contentDescription="@{gif.title}"
             android:focusable="true"
             android:foreground="?attr/selectableItemBackground"
             android:onClick="@{() -> onItemClick.invoke(gif)}"
-            android:background="#1AD1C4E9"
             app:centering="@{true}"
             app:gifUrl="@{gif.images.downsized.url}"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintDimensionRatio="H,1:1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:ignore="ContentDescription" />
+            app:layout_constraintTop_toTopOf="parent" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

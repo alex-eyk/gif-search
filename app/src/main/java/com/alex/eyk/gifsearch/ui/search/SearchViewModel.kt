@@ -37,6 +37,7 @@ class SearchViewModel @Inject constructor(
     val query = MutableStateFlow("")
 
     private var offset = 0
+    private var resultsQuery: String = ""
 
     fun onSuggestionSelected(
         suggestion: Suggestion
@@ -50,7 +51,9 @@ class SearchViewModel @Inject constructor(
             if (_searchResults.value is Success) {
                 _searchResults.value = UiState.None
             }
+            resultsQuery = ""
         }
+        resultsQuery = query.value
         _searchResults.value = UiState.Loading
         viewModelScope.launch {
             _searchResults.value = UiState.by {
@@ -65,14 +68,14 @@ class SearchViewModel @Inject constructor(
     }
 
     fun searchNextGifs() {
-        if (query.value.isBlank()) {
+        if (resultsQuery.isBlank()) {
             return
         }
         _nextResults.value = UiState.Loading
         viewModelScope.launch {
             _nextResults.value = UiState.by {
                 gifRepository.findAll(
-                    query.value,
+                    resultsQuery,
                     limit = GIFS_PER_REQUEST,
                     offset = offset
                 )
