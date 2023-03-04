@@ -1,15 +1,20 @@
 package com.alex.eyk.gifsearch.ui.binding
 
+import android.content.Context
+import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
+import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 object GifBindingAdapters {
 
     @BindingAdapter(
         value = [
             "gifUrl",
-            "centering"
+            "centering",
+            "loading"
         ],
         requireAll = false
     )
@@ -17,10 +22,12 @@ object GifBindingAdapters {
     fun setGif(
         imageView: ImageView,
         url: String,
-        centering: Boolean? /* = false */
+        centering: Boolean? /* = false */,
+        loading: Boolean? /* = false */
     ) {
         // binding adapter does not support default argument values
         val imageCentering = centering ?: false
+        val showLoading = loading ?: false
 
         Glide.with(imageView)
             .load(url)
@@ -31,6 +38,28 @@ object GifBindingAdapters {
                     it.fitCenter()
                 }
             }
+            .let {
+                if (showLoading) {
+                    it.placeholder(
+                        getProgressDrawable(imageView.context)
+                    )
+                } else {
+                    it
+                }
+            }
+            .transition(
+                DrawableTransitionOptions.withCrossFade()
+            )
             .into(imageView)
+    }
+
+    private fun getProgressDrawable(
+        context: Context
+    ): Drawable {
+        return CircularProgressDrawable(context).apply {
+            strokeWidth = 5f
+            centerRadius = 30f
+            start()
+        }
     }
 }

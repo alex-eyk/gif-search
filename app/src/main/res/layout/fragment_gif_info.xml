@@ -19,7 +19,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:contentDescription="@{viewModel.gif.title}"
-            app:gifUrl="@{viewModel.gif.images.original.url}" />
+            app:gifUrl="@{viewModel.gif.images.original.url}"
+            app:loading="@{true}" />
 
         <View
             android:layout_width="match_parent"
