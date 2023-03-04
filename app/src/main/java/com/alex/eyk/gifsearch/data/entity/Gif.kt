@@ -3,6 +3,7 @@ package com.alex.eyk.gifsearch.data.entity
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
+import java.util.Date
 
 @Parcelize
 data class Gif(
@@ -28,7 +29,12 @@ data class Gif(
     @SerializedName("images")
     val images: Images,
 
-    ) : Parcelable {
+    @SerializedName("import_datetime")
+    val created: Date,
+
+    @SerializedName("trending_datetime")
+    val trending: Date
+) : Parcelable {
 
     fun getOptimalUrl(): String {
         return shortUrl.ifEmpty { url }

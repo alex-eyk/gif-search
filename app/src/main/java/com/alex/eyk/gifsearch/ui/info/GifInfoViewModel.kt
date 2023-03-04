@@ -8,6 +8,8 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 @HiltViewModel
@@ -25,6 +27,8 @@ class GifInfoViewModel @Inject constructor(
     companion object {
 
         private const val GIF_URL_LABEL = "gif url"
+
+        private const val GIF_DATE_FORMAT = "dd-MM-yyyy"
     }
 
     lateinit var gif: Gif
@@ -51,4 +55,19 @@ class GifInfoViewModel @Inject constructor(
             )
         }
     }
+
+    fun getCreatedDay(): String {
+        return getGifDateFormat()
+            .format(gif.created)
+    }
+
+    fun getTrendingDay(): String {
+        return getGifDateFormat()
+            .format(gif.trending)
+    }
+
+    private fun getGifDateFormat() = SimpleDateFormat(
+        GIF_DATE_FORMAT,
+        Locale.getDefault()
+    )
 }

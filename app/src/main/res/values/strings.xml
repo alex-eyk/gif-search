@@ -4,6 +4,8 @@
 
     <string name="name">Название</string>
     <string name="link">Ссылка</string>
+    <string name="created">Создано</string>
+    <string name="trending">Была в тренде</string>
 
     <string name="link_copied">Ссылка скопирована</string>
 

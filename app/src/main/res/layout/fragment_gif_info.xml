@@ -7,6 +7,8 @@
 
         <import type="android.view.View" />
 
+        <import type="kotlin.text.StringsKt" />
+
         <variable
             name="viewModel"
             type="com.alex.eyk.gifsearch.ui.info.GifInfoViewModel" />
@@ -37,17 +39,12 @@
 
             <include
                 layout="@layout/item_detailed_clickable"
-                android:visibility='@{!viewModel.gif.title.equals("") ? View.VISIBLE : View.GONE}'
+                android:visibility="@{!viewModel.gif.title.isEmpty() ? View.VISIBLE : View.GONE}"
                 app:caption="@{viewModel.gif.title}"
                 app:icon="@{@drawable/ic_title}"
                 app:title="@{@string/name}" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height" />
-
             <include
-                android:id="@+id/gif_short_url"
                 layout="@layout/item_detailed_clickable"
                 app:caption="@{viewModel.gif.getOptimalUrl()}"
                 app:icon="@{@drawable/ic_link}"
@@ -55,9 +52,20 @@
                 app:onLongClick="@{viewModel::onUrlLongClick}"
                 app:title="@{@string/link}" />
 
-            <com.google.android.material.divider.MaterialDivider
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/divider_height" />
+            <include
+                layout="@layout/item_detailed_clickable"
+                app:caption="@{viewModel.getCreatedDay()}"
+                app:icon="@{@drawable/ic_created}"
+                app:title="@{@string/created}"
+                app:visibleOnCorrectDate="@{viewModel.gif.created}" />
+
+            <include
+                layout="@layout/item_detailed_clickable"
+                app:caption="@{viewModel.getTrendingDay()}"
+                app:icon="@{@drawable/ic_trending}"
+                app:title="@{@string/trending}"
+                app:visibleOnCorrectDate="@{viewModel.gif.trending}" />
+
         </LinearLayout>
     </ScrollView>
 </layout>
