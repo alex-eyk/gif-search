@@ -1,4 +1,4 @@
-package com.alex.eyk.gifsearch.data.domain
+package com.alex.eyk.gifsearch.domain.net
 
 sealed class NetworkState {
 

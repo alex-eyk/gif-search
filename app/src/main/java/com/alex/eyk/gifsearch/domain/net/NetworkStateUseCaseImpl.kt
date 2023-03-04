@@ -1,4 +1,4 @@
-package com.alex.eyk.gifsearch.data.domain
+package com.alex.eyk.gifsearch.domain.net
 
 import android.content.Context
 import android.net.ConnectivityManager
@@ -6,8 +6,8 @@ import android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH
 import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
 import android.net.NetworkCapabilities.TRANSPORT_ETHERNET
 import android.net.NetworkCapabilities.TRANSPORT_WIFI
-import com.alex.eyk.gifsearch.data.domain.NetworkState.OFFLINE
-import com.alex.eyk.gifsearch.data.domain.NetworkState.ONLINE
+import com.alex.eyk.gifsearch.domain.net.NetworkState.OFFLINE
+import com.alex.eyk.gifsearch.domain.net.NetworkState.ONLINE
 
 class NetworkStateUseCaseImpl(
     private val appContext: Context

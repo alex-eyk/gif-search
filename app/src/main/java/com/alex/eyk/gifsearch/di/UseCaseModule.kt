@@ -1,8 +1,10 @@
 package com.alex.eyk.gifsearch.di
 
 import android.content.Context
-import com.alex.eyk.gifsearch.data.domain.NetworkStateUseCase
-import com.alex.eyk.gifsearch.data.domain.NetworkStateUseCaseImpl
+import com.alex.eyk.gifsearch.domain.clipboard.CopyUseCase
+import com.alex.eyk.gifsearch.domain.clipboard.CopyUseCaseImpl
+import com.alex.eyk.gifsearch.domain.net.NetworkStateUseCase
+import com.alex.eyk.gifsearch.domain.net.NetworkStateUseCaseImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,5 +22,13 @@ object UseCaseModule {
         @ApplicationContext appContext: Context
     ): NetworkStateUseCase {
         return NetworkStateUseCaseImpl(appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideCopyUseCase(
+        @ApplicationContext appContext: Context
+    ): CopyUseCase {
+        return CopyUseCaseImpl(appContext)
     }
 }
