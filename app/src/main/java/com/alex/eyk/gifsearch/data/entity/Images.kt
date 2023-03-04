@@ -1,44 +1,17 @@
 package com.alex.eyk.gifsearch.data.entity
 
-import android.os.Parcel
 import android.os.Parcelable
-import android.os.Parcelable.Creator
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class Images(
 
     @SerializedName("original")
     val original: OriginalImage
-) : Parcelable {
+) : Parcelable
 
-    constructor(parcel: Parcel) : this(
-        ParcelableUtils.readParcelable(parcel, OriginalImage::class.java)
-            ?: throw IllegalStateException()
-    )
-
-    override fun writeToParcel(
-        parcel: Parcel,
-        flags: Int
-    ) {
-        parcel.writeParcelable(original, flags)
-    }
-
-    override fun describeContents(): Int {
-        return 0
-    }
-
-    companion object CREATOR : Creator<Images> {
-
-        override fun createFromParcel(parcel: Parcel): Images {
-            return Images(parcel)
-        }
-
-        override fun newArray(size: Int): Array<Images?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
-
+@Parcelize
 data class OriginalImage(
 
     @SerializedName("height")
@@ -53,56 +26,22 @@ data class OriginalImage(
     @SerializedName("url")
     val url: String,
 
-    @SerializedName("mp4_size")
-    val mp4Size: Int,
-
-    @SerializedName("mp4")
-    val mp4Url: String,
-
     @SerializedName("frames")
-    val frames: Int,
+    val frames: Int
+) : Parcelable
 
-    @SerializedName("hash")
-    val hash: String
-) : Parcelable {
+@Parcelize
+data class DownsizedImage(
 
-    constructor(parcel: Parcel) : this(
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readInt(),
-        parcel.readString() ?: "",
-        parcel.readInt(),
-        parcel.readString() ?: "",
-        parcel.readInt(),
-        parcel.readString() ?: ""
-    )
+    @SerializedName("height")
+    val height: Int,
 
-    override fun writeToParcel(
-        parcel: Parcel,
-        flags: Int
-    ) {
-        parcel.writeInt(height)
-        parcel.writeInt(width)
-        parcel.writeInt(size)
-        parcel.writeString(url)
-        parcel.writeInt(mp4Size)
-        parcel.writeString(mp4Url)
-        parcel.writeInt(frames)
-        parcel.writeString(hash)
-    }
+    @SerializedName("width")
+    val width: Int,
 
-    override fun describeContents(): Int {
-        return 0
-    }
+    @SerializedName("size")
+    val size: Int,
 
-    companion object CREATOR : Creator<OriginalImage> {
-
-        override fun createFromParcel(parcel: Parcel): OriginalImage {
-            return OriginalImage(parcel)
-        }
-
-        override fun newArray(size: Int): Array<OriginalImage?> {
-            return arrayOfNulls(size)
-        }
-    }
-}
+    @SerializedName("url")
+    val url: String
+) : Parcelable
