@@ -12,4 +12,5 @@
     <string name="loading_new_gifs">Загружаем новые гифки…</string>
     <string name="unable_to_load_gifs">Не удалось получить результат. Проверьте подключение и
         повторите попытку.</string>
+    <string name="use_search_to_find_gifs">Воспользуйтесь поиском, чтобы найти интересующие вас гифки.</string>
 </resources>

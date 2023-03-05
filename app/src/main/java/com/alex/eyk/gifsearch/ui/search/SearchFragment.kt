@@ -1,5 +1,6 @@
 package com.alex.eyk.gifsearch.ui.search
 
+import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -118,9 +119,11 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         when (state) {
             is UiState.None -> {
                 gifsAdapter.submitList(emptyList())
+                binding.emptyResultsText.visibility = View.VISIBLE
             }
             is UiState.Success -> {
                 gifsAdapter.submitList(state.value)
+                binding.emptyResultsText.visibility = View.GONE
             }
             is UiState.Failure -> {
                 quickSnackbar(R.string.unable_to_load_gifs)

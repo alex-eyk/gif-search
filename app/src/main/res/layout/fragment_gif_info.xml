@@ -36,14 +36,14 @@
                 android:layout_height="@dimen/divider_height" />
 
             <include
-                layout="@layout/item_detailed_clickable"
+                layout="@layout/item_clickable_property"
                 android:visibility="@{!viewModel.gif.title.isEmpty() ? View.VISIBLE : View.GONE}"
                 app:caption="@{viewModel.gif.title}"
                 app:icon="@{@drawable/ic_title}"
                 app:title="@{@string/name}" />
 
             <include
-                layout="@layout/item_detailed_clickable"
+                layout="@layout/item_clickable_property"
                 app:caption="@{viewModel.gif.getOptimalUrl()}"
                 app:icon="@{@drawable/ic_link}"
                 app:onClick="@{() -> viewModel.onUrlClick()}"
@@ -51,14 +51,14 @@
                 app:title="@{@string/link}" />
 
             <include
-                layout="@layout/item_detailed_clickable"
+                layout="@layout/item_clickable_property"
                 app:caption="@{viewModel.getCreatedDay()}"
                 app:icon="@{@drawable/ic_created}"
                 app:title="@{@string/created}"
                 app:visibleOnCorrectDate="@{viewModel.gif.created}" />
 
             <include
-                layout="@layout/item_detailed_clickable"
+                layout="@layout/item_clickable_property"
                 app:caption="@{viewModel.getTrendingDay()}"
                 app:icon="@{@drawable/ic_trending}"
                 app:title="@{@string/trending}"
