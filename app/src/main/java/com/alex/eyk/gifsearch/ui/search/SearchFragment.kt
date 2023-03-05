@@ -1,6 +1,5 @@
 package com.alex.eyk.gifsearch.ui.search
 
-import android.view.View
 import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -18,7 +17,6 @@ import com.alex.eyk.gifsearch.ui.UiState
 import com.alex.eyk.gifsearch.ui.ext.addOnScrolledToBottomListener
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
-import com.alex.eyk.gifsearch.ui.toPx
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
@@ -30,7 +28,6 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
 
     companion object {
 
-        private const val GIFS_SPACING_DP = 8
         private const val GIFS_SPAN_COUNT = 3
     }
 
@@ -119,11 +116,9 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         when (state) {
             is UiState.None -> {
                 gifsAdapter.submitList(emptyList())
-                binding.emptyResultsText.visibility = View.VISIBLE
             }
             is UiState.Success -> {
                 gifsAdapter.submitList(state.value)
-                binding.emptyResultsText.visibility = View.GONE
             }
             is UiState.Failure -> {
                 quickSnackbar(R.string.unable_to_load_gifs)
@@ -171,7 +166,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             adapter = gifsAdapter
             addItemDecoration(
                 SpacesItemDecoration(
-                    spaceInPx = GIFS_SPACING_DP.toPx,
+                    spaceInPx = resources.getDimension(R.dimen.gif_spacing),
                     spanCount = GIFS_SPAN_COUNT
                 )
             )

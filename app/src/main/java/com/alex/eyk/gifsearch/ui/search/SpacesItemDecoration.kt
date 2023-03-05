@@ -10,6 +10,14 @@ class SpacesItemDecoration(
     private val spanCount: Int
 ) : RecyclerView.ItemDecoration() {
 
+    constructor(
+        spaceInPx: Number,
+        spanCount: Number
+    ) : this(
+        spaceInPx.toInt(),
+        spanCount.toInt()
+    )
+
     override fun getItemOffsets(
         outRect: Rect,
         view: View,

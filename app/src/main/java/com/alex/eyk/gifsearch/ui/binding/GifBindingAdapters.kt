@@ -11,6 +11,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 object GifBindingAdapters {
 
+    @Suppress("NAME_SHADOWING")
     @BindingAdapter(
         value = [
             "gifUrl",
@@ -27,20 +28,20 @@ object GifBindingAdapters {
         loading: Boolean? /* = false */
     ) {
         // binding adapter does not support default argument values
-        val imageCentering = centering ?: false
-        val showLoading = loading ?: false
+        val centering = centering ?: false
+        val loading = loading ?: false
 
         Glide.with(imageView)
             .load(url)
             .let {
-                if (imageCentering) {
+                if (centering) {
                     it.centerCrop()
                 } else {
                     it.fitCenter()
                 }
             }
             .let {
-                if (showLoading) {
+                if (loading) {
                     it.placeholder(
                         getProgressDrawable(imageView.context)
                     )
