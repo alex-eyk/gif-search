@@ -7,7 +7,7 @@ import android.view.animation.DecelerateInterpolator
 
 object AnimationUtils {
 
-    const val ALPHA_SHORT_DURATION = 100L
+    const val ALPHA_SHORT_DURATION = 150L
 
     fun appearance(
         view: View,
