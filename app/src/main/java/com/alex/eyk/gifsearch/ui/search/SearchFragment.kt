@@ -61,9 +61,9 @@ class SearchFragment : AbstractFragment<SearchViewModel, GifSearchBinding>(
         }
         gifsAdapter.onItemClick = ::showGifInfo
         gifsAdapter.addLoadStateListener {
-            if (it.refresh is LoadState.Error
-                || it.append is LoadState.Error
-                || it.prepend is LoadState.Error
+            if (it.refresh is LoadState.Error ||
+                it.append is LoadState.Error ||
+                it.prepend is LoadState.Error
             ) {
                 quickSnackbar(R.string.unable_to_load_gifs)
             }

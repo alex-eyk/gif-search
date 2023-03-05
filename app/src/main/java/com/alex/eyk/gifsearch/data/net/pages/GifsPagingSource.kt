@@ -21,6 +21,7 @@ class GifsPagingSource @AssistedInject constructor(
         fun create(@Assisted("query") query: String): GifsPagingSource
     }
 
+    @SuppressWarnings("ReturnCount")
     override fun getRefreshKey(
         state: PagingState<Int, Gif>
     ): Int? {
