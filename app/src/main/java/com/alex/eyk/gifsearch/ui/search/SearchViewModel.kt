@@ -61,7 +61,11 @@ class SearchViewModel @Inject constructor(
     private val _suggestions = MutableStateFlow<SuggestionsState>(UiState.None)
     val suggestions: StateFlow<SuggestionsState> = _suggestions
 
+    private val _wasAnySearch = MutableStateFlow(false)
+    val wasAnySearch: StateFlow<Boolean> = _wasAnySearch
+
     fun search(query: String) {
+        _wasAnySearch.value = true
         this.query.tryEmit(query)
     }
 

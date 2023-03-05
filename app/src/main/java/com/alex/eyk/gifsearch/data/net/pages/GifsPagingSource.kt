@@ -4,8 +4,8 @@ import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.alex.eyk.gifsearch.Either
 import com.alex.eyk.gifsearch.data.entity.Gif
+import com.alex.eyk.gifsearch.data.net.handleResponse
 import com.alex.eyk.gifsearch.data.net.service.GifService
-import com.alex.eyk.gifsearch.data.repo.impl.handleResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
