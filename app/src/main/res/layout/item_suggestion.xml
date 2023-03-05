@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="com.alex.eyk.gifsearch.data.entity.Suggestion" />
+
+        <import type="kotlin.jvm.functions.Function1" />
+
+        <import type="kotlin.Unit" />
+
+        <variable
+            name="suggestion"
+            type="Suggestion" />
+
+        <variable
+            name="onItemClick"
+            type="Function1&lt;Suggestion, Unit>" />
+    </data>
+
+    <TextView
+        android:id="@+id/suggestion_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/selectableItemBackground"
+        android:clickable="true"
+        android:focusable="true"
+        android:onClick="@{() -> onItemClick.invoke(suggestion)}"
+        android:padding="@dimen/box_padding"
+        android:text="@{suggestion.name}"
+        tools:text="Предложение" />
+</layout>

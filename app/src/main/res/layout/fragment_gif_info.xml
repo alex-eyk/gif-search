@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <data>
+
+        <import type="android.view.View" />
+
+        <variable
+            name="viewModel"
+            type="com.alex.eyk.gifsearch.ui.info.GifInfoViewModel" />
+    </data>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/gif_image"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="?attr/colorPlaceholder"
+                android:contentDescription="@{viewModel.gif.title}"
+                app:gifUrl="@{viewModel.gif.images.original.url}"
+                app:loading="@{true}"
+                tools:layout_height="200dp" />
+
+            <com.google.android.material.divider.MaterialDivider
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/divider_height" />
+
+            <include
+                layout="@layout/item_clickable_property"
+                android:visibility="@{!viewModel.gif.title.isEmpty() ? View.VISIBLE : View.GONE}"
+                app:caption="@{viewModel.gif.title}"
+                app:icon="@{@drawable/ic_title}"
+                app:title="@{@string/name}" />
+
+            <include
+                layout="@layout/item_clickable_property"
+                app:caption="@{viewModel.gif.getOptimalUrl()}"
+                app:icon="@{@drawable/ic_link}"
+                app:onClick="@{() -> viewModel.onUrlClick()}"
+                app:onLongClick="@{viewModel::onUrlLongClick}"
+                app:title="@{@string/link}" />
+
+            <include
+                layout="@layout/item_clickable_property"
+                app:caption="@{viewModel.getCreatedDay()}"
+                app:icon="@{@drawable/ic_created}"
+                app:title="@{@string/created}"
+                app:visibleOnCorrectDate="@{viewModel.gif.created}" />
+
+            <include
+                layout="@layout/item_clickable_property"
+                app:caption="@{viewModel.getTrendingDay()}"
+                app:icon="@{@drawable/ic_trending}"
+                app:title="@{@string/trending}"
+                app:visibleOnCorrectDate="@{viewModel.gif.trending}" />
+        </LinearLayout>
+    </ScrollView>
+</layout>

@@ -1,3 +1,16 @@
 <resources>
     <string name="app_name">gif search</string>
+    <string name="search_hint">Поиск</string>
+
+    <string name="name">Название</string>
+    <string name="link">Ссылка</string>
+    <string name="created">Создано</string>
+    <string name="trending">Была в тренде</string>
+
+    <string name="link_copied">Ссылка скопирована</string>
+
+    <string name="loading_new_gifs">Загружаем новые гифки…</string>
+    <string name="unable_to_load_gifs">Не удалось получить результат. Проверьте подключение и
+        повторите попытку.</string>
+    <string name="use_search_to_find_gifs">Воспользуйтесь поиском, чтобы найти интересующие вас гифки.</string>
 </resources>

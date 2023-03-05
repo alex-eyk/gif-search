@@ -1,0 +1,9 @@
+ext {
+    hiltVersion = '2.44'
+    fragmentVersion = '1.5.5'
+    navigationVersion = '2.5.3'
+    retrofitVersion = '2.9.0'
+    okhttpLogVersion = '4.9.3'
+    glideVersion = '4.15.0'
+    refreshLayoutVersion = '1.1.0'
+}
