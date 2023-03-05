@@ -4,6 +4,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -59,6 +60,14 @@ class SearchFragment : AbstractFragment<SearchViewModel, GifSearchBinding>(
             viewModel.search(it.name)
         }
         gifsAdapter.onItemClick = ::showGifInfo
+        gifsAdapter.addLoadStateListener {
+            if (it.refresh is LoadState.Error
+                || it.append is LoadState.Error
+                || it.prepend is LoadState.Error
+            ) {
+                quickSnackbar(R.string.unable_to_load_gifs)
+            }
+        }
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
