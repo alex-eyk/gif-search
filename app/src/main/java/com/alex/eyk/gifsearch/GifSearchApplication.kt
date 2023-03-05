@@ -13,7 +13,6 @@ class GifSearchApplication : Application() {
             val threadPolicy = StrictMode.ThreadPolicy.Builder()
                 .detectAll()
                 .penaltyLog()
-                // .penaltyDialog()
                 .build()
             StrictMode.setThreadPolicy(threadPolicy)
             val vmPolicy = StrictMode.VmPolicy.Builder()

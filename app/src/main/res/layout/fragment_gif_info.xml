@@ -63,7 +63,6 @@
                 app:icon="@{@drawable/ic_trending}"
                 app:title="@{@string/trending}"
                 app:visibleOnCorrectDate="@{viewModel.gif.trending}" />
-
         </LinearLayout>
     </ScrollView>
 </layout>

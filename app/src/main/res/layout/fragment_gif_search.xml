@@ -41,7 +41,6 @@
                 android:layout_height="match_parent"
                 android:clipToPadding="false"
                 android:paddingTop="@dimen/search_bar_height" />
-
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <com.google.android.material.appbar.AppBarLayout
@@ -54,7 +53,6 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/search_hint"
                 android:text="@{viewModel.query}" />
-
         </com.google.android.material.appbar.AppBarLayout>
 
         <com.google.android.material.search.SearchView
@@ -69,7 +67,6 @@
                 android:id="@+id/suggestions_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
-
         </com.google.android.material.search.SearchView>
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </layout>

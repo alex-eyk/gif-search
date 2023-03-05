@@ -6,7 +6,7 @@ import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
 import com.alex.eyk.gifsearch.R
-import com.bumptech.glide.Glide
+import com.alex.eyk.gifsearch.di.GlideApp
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 object GifBindingAdapters {
@@ -31,7 +31,7 @@ object GifBindingAdapters {
         val centering = centering ?: false
         val loading = loading ?: false
 
-        Glide.with(imageView)
+        GlideApp.with(imageView)
             .load(url)
             .let {
                 if (centering) {
