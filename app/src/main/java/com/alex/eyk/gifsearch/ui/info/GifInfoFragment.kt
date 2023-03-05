@@ -18,19 +18,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
 
 @AndroidEntryPoint
-class GifInfoFragment : AbstractFragment<FragmentGifInfoBinding>(
+class GifInfoFragment : AbstractFragment<GifInfoViewModel, FragmentGifInfoBinding>(
     layoutRes = R.layout.fragment_gif_info
 ) {
 
-    private val viewModel by viewModels<GifInfoViewModel>()
+    override val viewModel by viewModels<GifInfoViewModel>()
 
     private val navArgs by navArgs<GifInfoFragmentArgs>()
 
     override fun onBindingCreated() {
-        super.onBindingCreated()
         viewModel.gif = navArgs.gif
-        binding.viewModel = viewModel
-        binding.executePendingBindings()
         binding.gifImage.apply {
             layoutParams = getGifImageLayoutParams()
         }

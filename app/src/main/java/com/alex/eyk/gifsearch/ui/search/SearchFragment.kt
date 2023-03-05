@@ -22,7 +22,7 @@ import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
-class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
+class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBinding>(
     layoutRes = R.layout.fragment_gif_search
 ) {
 
@@ -31,7 +31,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         private const val GIFS_SPAN_COUNT = 3
     }
 
-    private val viewModel by viewModels<SearchViewModel>()
+    override val viewModel by viewModels<SearchViewModel>()
 
     private val gifsAdapter = GifAdapter()
     private val suggestionsAdapter = SuggestionAdapter()
@@ -39,8 +39,8 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     override fun onBindingCreated() {
         super.onBindingCreated()
         binding.viewModel = viewModel
+
         binding.apply {
-            executePendingBindings()
             searchView.editText.addTextChangedListener {
                 viewModel?.updateSuggestions(it.toString())
             }
@@ -83,12 +83,8 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         state: UiState<List<Suggestion>>
     ) {
         when (state) {
-            is UiState.None -> {
-            }
             is UiState.Success -> {
                 suggestionsAdapter.submitList(state.value)
-            }
-            is UiState.Loading -> {
             }
             else -> {}
         }
