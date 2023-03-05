@@ -1,43 +1,63 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.alex.eyk.gifsearch.ui.search
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.Pager
+import androidx.paging.PagingConfig
+import androidx.paging.PagingData
 import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.entity.Suggestion
-import com.alex.eyk.gifsearch.data.repo.GifRepository
+import com.alex.eyk.gifsearch.data.net.pages.GifsPagingSource
 import com.alex.eyk.gifsearch.data.repo.SuggestionsRepository
 import com.alex.eyk.gifsearch.ui.UiState
-import com.alex.eyk.gifsearch.ui.UiState.Success
 import dagger.hilt.android.lifecycle.HiltViewModel
-import javax.inject.Inject
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.flatMapLatest
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+
+private typealias SuggestionsState = UiState<List<Suggestion>>
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val gifRepository: GifRepository,
+    private val pagingSourceFactory: GifsPagingSource.Factory,
     private val suggestionsRepository: SuggestionsRepository
 ) : ViewModel() {
 
     companion object {
 
-        private const val GIFS_PER_REQUEST = 25
+        private const val GIFS_PER_PAGE = 25
     }
 
-    private val _searchResults = MutableStateFlow<UiState<List<Gif>>>(UiState.None)
-    val searchResults: StateFlow<UiState<List<Gif>>> = _searchResults
-
-    private val _nextResults = MutableStateFlow<UiState<List<Gif>>>(UiState.None)
-    val nextResults: StateFlow<UiState<List<Gif>>> = _nextResults
-
-    private val _suggestions = MutableStateFlow<UiState<List<Suggestion>>>(UiState.None)
-    val suggestions: StateFlow<UiState<List<Suggestion>>> = _suggestions
+    private val pagingConfig = PagingConfig(
+        pageSize = GIFS_PER_PAGE,
+        enablePlaceholders = false
+    )
 
     val query = MutableStateFlow("")
 
-    private var offset = 0
-    private var resultsQuery: String = ""
+    val gifs: StateFlow<PagingData<Gif>> = query
+        .map {
+            Pager(pagingConfig) {
+                pagingSourceFactory.create(it)
+            }
+        }
+        .flatMapLatest { it.flow }
+        .stateIn(
+            viewModelScope,
+            SharingStarted.Lazily,
+            PagingData.empty()
+        )
+
+    private val _suggestions = MutableStateFlow<SuggestionsState>(UiState.None)
+    val suggestions: StateFlow<SuggestionsState> = _suggestions
 
     fun onSuggestionSelected(
         suggestion: Suggestion
@@ -47,41 +67,10 @@ class SearchViewModel @Inject constructor(
     }
 
     private fun searchGifs() {
-        if (query.value.isBlank()) {
-            if (_searchResults.value is Success) {
-                _searchResults.value = UiState.None
-            }
-            resultsQuery = ""
-        }
-        resultsQuery = query.value
-        _searchResults.value = UiState.Loading
-        viewModelScope.launch {
-            _searchResults.value = UiState.by {
-                gifRepository.findAll(
-                    query.value,
-                    limit = GIFS_PER_REQUEST,
-                    offset = 0
-                )
-            }
-            offset = GIFS_PER_REQUEST
-        }
     }
 
     fun searchNextGifs() {
-        if (resultsQuery.isBlank()) {
-            return
-        }
-        _nextResults.value = UiState.Loading
-        viewModelScope.launch {
-            _nextResults.value = UiState.by {
-                gifRepository.findAll(
-                    resultsQuery,
-                    limit = GIFS_PER_REQUEST,
-                    offset = offset
-                )
-            }
-            offset += GIFS_PER_REQUEST
-        }
+
     }
 
     fun updateSuggestions() {

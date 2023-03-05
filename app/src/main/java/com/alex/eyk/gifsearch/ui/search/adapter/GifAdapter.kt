@@ -1,32 +1,53 @@
 package com.alex.eyk.gifsearch.ui.search.adapter
 
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.RecyclerView
 import com.alex.eyk.gifsearch.R
 import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.databinding.ItemSquareGifBinding
-import com.alex.eyk.gifsearch.ui.BindingListAdapter
-import com.alex.eyk.gifsearch.ui.BindingViewHolder
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter.GifViewHolder
 
-class GifAdapter : BindingListAdapter<ItemSquareGifBinding, Gif, GifViewHolder>(
-    diffCallback = GifsDiffCallback(),
-    layoutRes = R.layout.item_square_gif
+class GifAdapter : PagingDataAdapter<Gif, GifViewHolder>(
+    diffCallback = GifsDiffCallback()
 ) {
 
     var onItemClick: ((gif: Gif) -> Unit)? = null
 
     override fun onCreateViewHolder(
-        binding: ItemSquareGifBinding
-    ) = GifViewHolder(binding)
+        parent: ViewGroup,
+        viewType: Int
+    ): GifViewHolder {
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = DataBindingUtil.inflate<ItemSquareGifBinding>(
+            inflater,
+            R.layout.item_square_gif,
+            parent,
+            false
+        )
+        return GifViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(
+        holder: GifViewHolder,
+        position: Int
+    ) {
+        holder.bindTo(getItem(position))
+    }
 
     inner class GifViewHolder(
-        binding: ItemSquareGifBinding
-    ) : BindingViewHolder<Gif, ItemSquareGifBinding>(binding) {
+        private val binding: ItemSquareGifBinding
+    ) : RecyclerView.ViewHolder(binding.root) {
 
-        override fun bindTo(item: Gif) {
-            binding.gif = item
-            binding.onItemClick = onItemClick
-            binding.executePendingBindings()
+        fun bindTo(item: Gif?) {
+            with(binding) {
+                gif = item
+                onItemClick = this@GifAdapter.onItemClick
+                executePendingBindings()
+            }
         }
     }
 

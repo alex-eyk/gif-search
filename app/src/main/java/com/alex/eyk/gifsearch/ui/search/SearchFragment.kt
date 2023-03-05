@@ -68,15 +68,14 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
-        viewModel.apply {
+        with(viewModel) {
             lifecycleScope.launch {
                 suggestions.collect(::collectSuggestionsState)
             }
             lifecycleScope.launch {
-                searchResults.collect(::collectSearchResultsState)
-            }
-            lifecycleScope.launch {
-                nextResults.collect(::collectNextResultsState)
+                gifs.collect {
+                    gifsAdapter.submitData(it)
+                }
             }
         }
     }
@@ -99,7 +98,6 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     ) {
         when (state) {
             is UiState.None -> {
-                gifsAdapter.submitList(emptyList())
             }
             is UiState.Success -> {
                 suggestionsAdapter.submitList(state.value)
@@ -107,44 +105,6 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
             is UiState.Loading -> {
             }
             else -> {}
-        }
-    }
-
-    private fun collectSearchResultsState(
-        state: UiState<List<Gif>>
-    ) {
-        when (state) {
-            is UiState.None -> {
-                gifsAdapter.submitList(emptyList())
-            }
-            is UiState.Success -> {
-                gifsAdapter.submitList(state.value)
-            }
-            is UiState.Failure -> {
-                quickSnackbar(R.string.unable_to_load_gifs)
-            }
-            else -> {}
-        }
-    }
-
-    private fun collectNextResultsState(
-        state: UiState<List<Gif>>
-    ) {
-        when (state) {
-            is UiState.None -> {}
-            is UiState.Loading -> {
-                quickSnackbar(R.string.loading_new_gifs)
-            }
-            is UiState.Success -> {
-                gifsAdapter.submitList(
-                    gifsAdapter.currentList + state.value
-                )
-                scrollComplete = false
-            }
-            is UiState.Failure -> {
-                quickSnackbar(R.string.unable_to_load_gifs)
-                scrollComplete = false
-            }
         }
     }
 

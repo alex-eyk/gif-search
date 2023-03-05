@@ -8,11 +8,18 @@ import com.alex.eyk.gifsearch.data.net.service.GifService
 import com.alex.eyk.gifsearch.data.repo.impl.handleResponse
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 
-class GifsPagingSource(
+class GifsPagingSource @AssistedInject constructor(
     private val gifService: GifService,
-    private val query: String
+    @Assisted("query") private val query: String
 ) : PagingSource<Int, Gif>() {
+
+    @AssistedFactory
+    interface Factory {
+
+        fun create(@Assisted("query") query: String): GifsPagingSource
+    }
 
     override fun getRefreshKey(
         state: PagingState<Int, Gif>
@@ -48,11 +55,5 @@ class GifsPagingSource(
                 LoadResult.Error(result.e)
             }
         }
-    }
-
-    @AssistedFactory
-    interface Factory {
-
-        fun create(@Assisted("query") query: String): GifsPagingSource
     }
 }
