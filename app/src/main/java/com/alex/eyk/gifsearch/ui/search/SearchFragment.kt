@@ -4,6 +4,7 @@ import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,15 +15,18 @@ import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.databinding.FragmentGifSearchBinding
 import com.alex.eyk.gifsearch.ui.AbstractFragment
 import com.alex.eyk.gifsearch.ui.UiState
-import com.alex.eyk.gifsearch.ui.ext.addOnScrolledToBottomListener
+import com.alex.eyk.gifsearch.ui.ext.setOnActionListener
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+private typealias GifSearchBinding = FragmentGifSearchBinding
+
 @AndroidEntryPoint
-class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
+class SearchFragment : AbstractFragment<SearchViewModel, GifSearchBinding>(
     layoutRes = R.layout.fragment_gif_search
 ) {
 
@@ -31,124 +35,72 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         private const val GIFS_SPAN_COUNT = 3
     }
 
-    private val viewModel by viewModels<SearchViewModel>()
+    override val viewModel by viewModels<SearchViewModel>()
 
     private val gifsAdapter = GifAdapter()
     private val suggestionsAdapter = SuggestionAdapter()
 
-    private var scrollComplete: Boolean = false
-
     override fun onBindingCreated() {
         super.onBindingCreated()
-        binding.viewModel = viewModel
-        binding.apply {
-            executePendingBindings()
-            searchView.editText.addTextChangedListener {
-                viewModel?.updateSuggestions()
-            }
+        with(binding) {
             prepareSuggestionsRecyclerViews()
             prepareGifsRecyclerView()
-            searchView.editText
-                .setOnEditorActionListener { _, _, _ ->
-                    onSuggestionSelected(
-                        Suggestion(searchView.text.toString())
-                    )
-                    return@setOnEditorActionListener false
-                }
-            gifsRecyclerView.addOnScrolledToBottomListener {
-                if (scrollComplete) {
-                    return@addOnScrolledToBottomListener
-                }
-                viewModel?.searchNextGifs()
-                scrollComplete = true
+
+            searchView.editText.addTextChangedListener {
+                viewModel?.updateSuggestions(it.toString())
+            }
+            searchView.editText.setOnActionListener {
+                viewModel?.search(searchView.text.toString())
+                onQueryCompleted(searchView.text.toString())
             }
         }
-        suggestionsAdapter.onItemClick = ::onSuggestionSelected
-        gifsAdapter.onItemClick = ::onGifSelected
+
+        suggestionsAdapter.onItemClick = {
+            binding.onQueryCompleted(it.name)
+            viewModel.search(it.name)
+        }
+        gifsAdapter.onItemClick = ::showGifInfo
+        gifsAdapter.addLoadStateListener {
+            if (it.refresh is LoadState.Error ||
+                it.append is LoadState.Error ||
+                it.prepend is LoadState.Error
+            ) {
+                quickSnackbar(R.string.unable_to_load_gifs)
+            }
+        }
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
-        viewModel.apply {
+        with(viewModel) {
             lifecycleScope.launch {
                 suggestions.collect(::collectSuggestionsState)
             }
             lifecycleScope.launch {
-                searchResults.collect(::collectSearchResultsState)
-            }
-            lifecycleScope.launch {
-                nextResults.collect(::collectNextResultsState)
+                gifs.collectLatest {
+                    gifsAdapter.submitData(it)
+                }
             }
         }
-    }
-
-    private fun onSuggestionSelected(
-        suggestion: Suggestion
-    ) {
-        binding.searchView.hide()
-        viewModel.onSuggestionSelected(suggestion)
-    }
-
-    private fun onGifSelected(gif: Gif) {
-        val action = SearchFragmentDirections
-            .actionGifSearchToGifInfo(gif)
-        findNavController().navigate(action)
     }
 
     private fun collectSuggestionsState(
         state: UiState<List<Suggestion>>
     ) {
         when (state) {
-            is UiState.None -> {
-                gifsAdapter.submitList(emptyList())
-            }
             is UiState.Success -> {
                 suggestionsAdapter.submitList(state.value)
             }
-            is UiState.Loading -> {
-            }
             else -> {}
         }
     }
 
-    private fun collectSearchResultsState(
-        state: UiState<List<Gif>>
-    ) {
-        when (state) {
-            is UiState.None -> {
-                gifsAdapter.submitList(emptyList())
-            }
-            is UiState.Success -> {
-                gifsAdapter.submitList(state.value)
-            }
-            is UiState.Failure -> {
-                quickSnackbar(R.string.unable_to_load_gifs)
-            }
-            else -> {}
-        }
+    private fun showGifInfo(gif: Gif) {
+        val action = SearchFragmentDirections
+            .actionGifSearchToGifInfo(gif)
+        findNavController().navigate(action)
     }
 
-    private fun collectNextResultsState(
-        state: UiState<List<Gif>>
-    ) {
-        when (state) {
-            is UiState.None -> {}
-            is UiState.Loading -> {
-                quickSnackbar(R.string.loading_new_gifs)
-            }
-            is UiState.Success -> {
-                gifsAdapter.submitList(
-                    gifsAdapter.currentList + state.value
-                )
-                scrollComplete = false
-            }
-            is UiState.Failure -> {
-                quickSnackbar(R.string.unable_to_load_gifs)
-                scrollComplete = false
-            }
-        }
-    }
-
-    private fun FragmentGifSearchBinding.prepareSuggestionsRecyclerViews() {
+    private fun GifSearchBinding.prepareSuggestionsRecyclerViews() {
         suggestionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = suggestionsAdapter
@@ -160,7 +112,7 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
         }
     }
 
-    private fun FragmentGifSearchBinding.prepareGifsRecyclerView() {
+    private fun GifSearchBinding.prepareGifsRecyclerView() {
         gifsRecyclerView.apply {
             layoutManager = GridLayoutManager(context, GIFS_SPAN_COUNT)
             adapter = gifsAdapter
@@ -171,5 +123,12 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 )
             )
         }
+    }
+
+    private fun GifSearchBinding.onQueryCompleted(
+        query: String
+    ) {
+        searchView.hide()
+        searchBar.text = query
     }
 }

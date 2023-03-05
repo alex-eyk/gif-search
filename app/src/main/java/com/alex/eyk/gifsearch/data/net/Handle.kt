@@ -1,8 +1,8 @@
-package com.alex.eyk.gifsearch.data.repo.impl
+package com.alex.eyk.gifsearch.data.net
 
 import com.alex.eyk.gifsearch.Either
-import com.alex.eyk.gifsearch.data.repo.exception.EmptyResponseBodyException
-import com.alex.eyk.gifsearch.data.repo.exception.ServerException
+import com.alex.eyk.gifsearch.data.net.exception.EmptyResponseBodyException
+import com.alex.eyk.gifsearch.data.net.exception.ServerException
 import retrofit2.Response
 
 private const val INTERNAL_SERVER_ERROR = 500
