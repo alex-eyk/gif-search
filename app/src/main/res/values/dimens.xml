@@ -11,4 +11,7 @@
     <dimen name="between_elements_medium_margin">24dp</dimen>
 
     <dimen name="box_padding">16dp</dimen>
+
+    <dimen name="progress_bar_stroke_width">4dp</dimen>
+    <dimen name="progress_bar_radius">16dp</dimen>
 </resources>

@@ -5,14 +5,11 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
-import com.alex.eyk.gifsearch.ui.toPx
+import com.alex.eyk.gifsearch.R
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 object GifBindingAdapters {
-
-    private val PROGRESS_BAR_STROKE_WIDTH = 4f.toPx.toFloat()
-    private val PROGRESS_BAR_RADIUS = 16.toPx.toFloat()
 
     @BindingAdapter(
         value = [
@@ -61,8 +58,10 @@ object GifBindingAdapters {
         context: Context
     ): Drawable {
         return CircularProgressDrawable(context).apply {
-            strokeWidth = PROGRESS_BAR_STROKE_WIDTH
-            centerRadius = PROGRESS_BAR_RADIUS
+            strokeWidth = context.resources
+                .getDimension(R.dimen.progress_bar_stroke_width)
+            centerRadius = context.resources
+                .getDimension(R.dimen.progress_bar_radius)
             start()
         }
     }
