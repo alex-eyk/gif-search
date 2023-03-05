@@ -8,15 +8,10 @@ import okhttp3.Request
 import okhttp3.Response
 
 class GiphyCacheInterceptor(
-    private val networkStateUseCase: NetworkStateUseCase
+    private val networkStateUseCase: NetworkStateUseCase,
+    private val onlineMaxCacheAge: Int,
+    private val offlineMaxCacheAge: Int
 ) : Interceptor {
-
-    companion object {
-
-        private const val ONLINE_MAX_CACHE_AGE = 30
-
-        private const val OFFLINE_MAX_CACHE_AGE = 60 * 60 * 24 * 7
-    }
 
     override fun intercept(
         chain: Chain
@@ -28,7 +23,7 @@ class GiphyCacheInterceptor(
                 newRequest = request.newBuilder()
                     .header(
                         "Cache-Control",
-                        "public, max-age=$ONLINE_MAX_CACHE_AGE"
+                        "public, max-age=$onlineMaxCacheAge"
                     )
                     .build()
             }
@@ -36,7 +31,7 @@ class GiphyCacheInterceptor(
                 newRequest = request.newBuilder()
                     .header(
                         "Cache-Control",
-                        "public, only-if-cached, max-stale=$OFFLINE_MAX_CACHE_AGE"
+                        "public, only-if-cached, max-stale=$offlineMaxCacheAge"
                     )
                     .build()
             }

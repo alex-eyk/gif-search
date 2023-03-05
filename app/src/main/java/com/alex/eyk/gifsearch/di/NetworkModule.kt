@@ -29,6 +29,9 @@ object NetworkModule {
 
     private const val RESPONSES_CACHE_SIZE_IN_BYTES = 10L * 1024L * 1024L
 
+    private const val ONLINE_MAX_CACHE_AGE = 30
+    private const val OFFLINE_MAX_CACHE_AGE = 60 * 60 * 24 * 7
+
     @Singleton
     @Provides
     fun provideGifService(
@@ -77,7 +80,11 @@ object NetworkModule {
     fun provideGiphyCacheInterceptor(
         networkStateUseCase: NetworkStateUseCase
     ): GiphyCacheInterceptor {
-        return GiphyCacheInterceptor(networkStateUseCase)
+        return GiphyCacheInterceptor(
+            networkStateUseCase,
+            ONLINE_MAX_CACHE_AGE,
+            OFFLINE_MAX_CACHE_AGE
+        )
     }
 
     @Singleton

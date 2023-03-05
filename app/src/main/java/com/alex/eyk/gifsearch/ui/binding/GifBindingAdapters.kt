@@ -5,8 +5,8 @@ import android.graphics.drawable.Drawable
 import android.widget.ImageView
 import androidx.databinding.BindingAdapter
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable
+import com.alex.eyk.gifsearch.GlideApp
 import com.alex.eyk.gifsearch.R
-import com.alex.eyk.gifsearch.di.GlideApp
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
 object GifBindingAdapters {

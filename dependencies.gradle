@@ -5,4 +5,5 @@ ext {
     retrofitVersion = '2.9.0'
     okhttpLogVersion = '4.9.3'
     glideVersion = '4.15.0'
+    refreshLayoutVersion = '1.1.0'
 }
