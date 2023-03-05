@@ -7,6 +7,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.data.net.pages.GifsPagingSource
@@ -36,20 +37,21 @@ class SearchViewModel @Inject constructor(
         private const val GIFS_PER_PAGE = 25
     }
 
-    private val pagingConfig = PagingConfig(
+    private val gifPagingConfig = PagingConfig(
         pageSize = GIFS_PER_PAGE,
         enablePlaceholders = false
     )
 
-    val query = MutableStateFlow("")
+    private val query = MutableStateFlow("")
 
     val gifs: StateFlow<PagingData<Gif>> = query
         .map {
-            Pager(pagingConfig) {
+            Pager(gifPagingConfig) {
                 pagingSourceFactory.create(it)
             }
         }
-        .flatMapLatest { it.flow }
+        .flatMapLatest { pager -> pager.flow }
+        .cachedIn(viewModelScope)
         .stateIn(
             viewModelScope,
             SharingStarted.Lazily,
@@ -59,27 +61,19 @@ class SearchViewModel @Inject constructor(
     private val _suggestions = MutableStateFlow<SuggestionsState>(UiState.None)
     val suggestions: StateFlow<SuggestionsState> = _suggestions
 
-    fun onSuggestionSelected(
-        suggestion: Suggestion
+    fun search(query: String) {
+        this.query.tryEmit(query)
+    }
+
+    fun updateSuggestions(
+        query: String
     ) {
-        query.value = suggestion.name
-        searchGifs()
-    }
-
-    private fun searchGifs() {
-    }
-
-    fun searchNextGifs() {
-
-    }
-
-    fun updateSuggestions() {
-        if (query.value.isBlank()) {
+        if (query.isBlank()) {
             _suggestions.value = UiState.None
         }
         viewModelScope.launch {
             _suggestions.value = UiState.by {
-                suggestionsRepository.findAll(query.value)
+                suggestionsRepository.findAll(query)
             }
         }
     }

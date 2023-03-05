@@ -9,16 +9,16 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.alex.eyk.gifsearch.R
-import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.databinding.FragmentGifSearchBinding
 import com.alex.eyk.gifsearch.ui.AbstractFragment
 import com.alex.eyk.gifsearch.ui.UiState
-import com.alex.eyk.gifsearch.ui.ext.addOnScrolledToBottomListener
+import com.alex.eyk.gifsearch.ui.ext.setOnActionListener
 import com.alex.eyk.gifsearch.ui.search.adapter.GifAdapter
 import com.alex.eyk.gifsearch.ui.search.adapter.SuggestionAdapter
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
@@ -36,35 +36,34 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
     private val gifsAdapter = GifAdapter()
     private val suggestionsAdapter = SuggestionAdapter()
 
-    private var scrollComplete: Boolean = false
-
     override fun onBindingCreated() {
         super.onBindingCreated()
         binding.viewModel = viewModel
         binding.apply {
             executePendingBindings()
             searchView.editText.addTextChangedListener {
-                viewModel?.updateSuggestions()
+                viewModel?.updateSuggestions(it.toString())
             }
             prepareSuggestionsRecyclerViews()
             prepareGifsRecyclerView()
-            searchView.editText
-                .setOnEditorActionListener { _, _, _ ->
-                    onSuggestionSelected(
-                        Suggestion(searchView.text.toString())
-                    )
-                    return@setOnEditorActionListener false
-                }
-            gifsRecyclerView.addOnScrolledToBottomListener {
-                if (scrollComplete) {
-                    return@addOnScrolledToBottomListener
-                }
-                viewModel?.searchNextGifs()
-                scrollComplete = true
+            searchView.editText.setOnActionListener {
+                viewModel?.search(
+                    searchView.text.toString()
+                )
+                binding.searchView.hide()
+                binding.searchBar.text = searchView.text.toString()
             }
         }
-        suggestionsAdapter.onItemClick = ::onSuggestionSelected
-        gifsAdapter.onItemClick = ::onGifSelected
+        suggestionsAdapter.onItemClick = {
+            binding.searchView.hide()
+            binding.searchBar.text = it.name
+            viewModel.search(it.name)
+        }
+        gifsAdapter.onItemClick = {
+            val action = SearchFragmentDirections
+                .actionGifSearchToGifInfo(it)
+            findNavController().navigate(action)
+        }
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
@@ -73,24 +72,11 @@ class SearchFragment : AbstractFragment<FragmentGifSearchBinding>(
                 suggestions.collect(::collectSuggestionsState)
             }
             lifecycleScope.launch {
-                gifs.collect {
+                gifs.collectLatest {
                     gifsAdapter.submitData(it)
                 }
             }
         }
-    }
-
-    private fun onSuggestionSelected(
-        suggestion: Suggestion
-    ) {
-        binding.searchView.hide()
-        viewModel.onSuggestionSelected(suggestion)
-    }
-
-    private fun onGifSelected(gif: Gif) {
-        val action = SearchFragmentDirections
-            .actionGifSearchToGifInfo(gif)
-        findNavController().navigate(action)
     }
 
     private fun collectSuggestionsState(
