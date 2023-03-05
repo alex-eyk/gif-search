@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager.HORIZONTAL
 import com.alex.eyk.gifsearch.R
+import com.alex.eyk.gifsearch.data.entity.Gif
 import com.alex.eyk.gifsearch.data.entity.Suggestion
 import com.alex.eyk.gifsearch.databinding.FragmentGifSearchBinding
 import com.alex.eyk.gifsearch.ui.AbstractFragment
@@ -21,8 +22,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
+private typealias GifSearchBinding = FragmentGifSearchBinding
+
 @AndroidEntryPoint
-class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBinding>(
+class SearchFragment : AbstractFragment<SearchViewModel, GifSearchBinding>(
     layoutRes = R.layout.fragment_gif_search
 ) {
 
@@ -38,32 +41,24 @@ class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBindin
 
     override fun onBindingCreated() {
         super.onBindingCreated()
-        binding.viewModel = viewModel
+        with(binding) {
+            prepareSuggestionsRecyclerViews()
+            prepareGifsRecyclerView()
 
-        binding.apply {
             searchView.editText.addTextChangedListener {
                 viewModel?.updateSuggestions(it.toString())
             }
-            prepareSuggestionsRecyclerViews()
-            prepareGifsRecyclerView()
             searchView.editText.setOnActionListener {
-                viewModel?.search(
-                    searchView.text.toString()
-                )
-                binding.searchView.hide()
-                binding.searchBar.text = searchView.text.toString()
+                viewModel?.search(searchView.text.toString())
+                onQueryCompleted(searchView.text.toString())
             }
         }
+
         suggestionsAdapter.onItemClick = {
-            binding.searchView.hide()
-            binding.searchBar.text = it.name
+            binding.onQueryCompleted(it.name)
             viewModel.search(it.name)
         }
-        gifsAdapter.onItemClick = {
-            val action = SearchFragmentDirections
-                .actionGifSearchToGifInfo(it)
-            findNavController().navigate(action)
-        }
+        gifsAdapter.onItemClick = ::showGifInfo
     }
 
     override fun onCollectStates(): suspend CoroutineScope.() -> Unit = {
@@ -90,7 +85,13 @@ class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBindin
         }
     }
 
-    private fun FragmentGifSearchBinding.prepareSuggestionsRecyclerViews() {
+    private fun showGifInfo(gif: Gif) {
+        val action = SearchFragmentDirections
+            .actionGifSearchToGifInfo(gif)
+        findNavController().navigate(action)
+    }
+
+    private fun GifSearchBinding.prepareSuggestionsRecyclerViews() {
         suggestionsRecyclerView.apply {
             layoutManager = LinearLayoutManager(context)
             adapter = suggestionsAdapter
@@ -102,7 +103,7 @@ class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBindin
         }
     }
 
-    private fun FragmentGifSearchBinding.prepareGifsRecyclerView() {
+    private fun GifSearchBinding.prepareGifsRecyclerView() {
         gifsRecyclerView.apply {
             layoutManager = GridLayoutManager(context, GIFS_SPAN_COUNT)
             adapter = gifsAdapter
@@ -113,5 +114,12 @@ class SearchFragment : AbstractFragment<SearchViewModel, FragmentGifSearchBindin
                 )
             )
         }
+    }
+
+    private fun GifSearchBinding.onQueryCompleted(
+        query: String
+    ) {
+        searchView.hide()
+        searchBar.text = query
     }
 }
