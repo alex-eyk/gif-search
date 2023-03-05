@@ -4,7 +4,6 @@ import android.content.Context
 import com.alex.eyk.gifsearch.data.net.interceptor.GiphyApiKeyInterceptor
 import com.alex.eyk.gifsearch.data.net.interceptor.GiphyCacheInterceptor
 import com.alex.eyk.gifsearch.data.net.service.GifService
-import com.alex.eyk.gifsearch.data.pref.AppPreferences
 import com.alex.eyk.gifsearch.domain.net.NetworkStateUseCase
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -28,8 +27,7 @@ object NetworkModule {
 
     private const val GIPHY_DATE_FORMAT = "yyyy-MM-dd HH:mm:ss"
 
-    private const val KB_IN_MB = 1024
-    private const val B_IN_KB = 1024
+    private const val RESPONSES_CACHE_SIZE_IN_BYTES = 10L * 1024L * 1024L
 
     @Singleton
     @Provides
@@ -86,18 +84,10 @@ object NetworkModule {
     @Provides
     fun provideCache(
         @ApplicationContext appContext: Context,
-        prefs: AppPreferences
     ): Cache {
         return Cache(
             appContext.cacheDir,
-            calculateCacheSizeInB(prefs.getMaxCacheSizeInMB())
+            RESPONSES_CACHE_SIZE_IN_BYTES
         )
-    }
-
-    private fun calculateCacheSizeInB(
-        maxSizeInMB: Int
-    ): Long {
-        return (maxSizeInMB * KB_IN_MB * B_IN_KB * AppPreferences.CACHE_FOR_RESPONSES)
-            .toLong()
     }
 }
