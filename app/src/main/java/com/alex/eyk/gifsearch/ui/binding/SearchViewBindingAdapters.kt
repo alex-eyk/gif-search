@@ -7,6 +7,7 @@ import androidx.databinding.InverseBindingAdapter
 import androidx.databinding.InverseBindingListener
 import com.google.android.material.search.SearchView
 
+@SuppressWarnings("ReturnCount")
 object SearchViewBindingAdapters {
 
     @BindingAdapter("android:text")

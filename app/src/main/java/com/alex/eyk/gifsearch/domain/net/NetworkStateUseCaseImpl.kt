@@ -2,6 +2,7 @@ package com.alex.eyk.gifsearch.domain.net
 
 import android.content.Context
 import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.net.NetworkCapabilities.TRANSPORT_BLUETOOTH
 import android.net.NetworkCapabilities.TRANSPORT_CELLULAR
 import android.net.NetworkCapabilities.TRANSPORT_ETHERNET
@@ -17,16 +18,31 @@ class NetworkStateUseCaseImpl(
         val connectivityManager = appContext.getSystemService(
             Context.CONNECTIVITY_SERVICE
         ) as ConnectivityManager
-        val network = connectivityManager.activeNetwork
-            ?: return OFFLINE
-        val actNw = connectivityManager.getNetworkCapabilities(network)
-            ?: return OFFLINE
-        return when {
-            actNw.hasTransport(TRANSPORT_WIFI) -> ONLINE
-            actNw.hasTransport(TRANSPORT_CELLULAR) -> ONLINE
-            actNw.hasTransport(TRANSPORT_ETHERNET) -> ONLINE
-            actNw.hasTransport(TRANSPORT_BLUETOOTH) -> ONLINE
-            else -> OFFLINE
+
+        val activeNetworkCapabilities = connectivityManager
+            .getNetworkCapabilities(
+                connectivityManager.activeNetwork
+            ) ?: return OFFLINE
+
+        val isOnline = activeNetworkCapabilities.hasAnyTransport(
+            listOf(
+                TRANSPORT_WIFI,
+                TRANSPORT_CELLULAR,
+                TRANSPORT_ETHERNET,
+                TRANSPORT_BLUETOOTH
+            )
+        )
+        return if (isOnline) ONLINE else OFFLINE
+    }
+
+    private fun NetworkCapabilities.hasAnyTransport(
+        types: List<Int>
+    ): Boolean {
+        types.forEach {
+            if (this.hasTransport(it)) {
+                return true
+            }
         }
+        return false
     }
 }
